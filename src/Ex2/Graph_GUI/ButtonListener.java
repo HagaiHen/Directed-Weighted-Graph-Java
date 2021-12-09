@@ -55,9 +55,47 @@ public class ButtonListener extends JPanel implements ActionListener {
             gui.canvas.paintNode(indx);
         }
 
+        if (e.getActionCommand() == "TSP") {
+            boolean check = false;
+            List<NodeData> TspList = new ArrayList <NodeData>();
+            do{
+                String input = JOptionPane.showInputDialog("Enter Node:");
+                TspList.add(this.gui.canvas.graphDrawing.getNode(Integer.valueOf(input)));
+                int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "Enter Node:",
+                        "Enter Node:",
+                        JOptionPane.YES_NO_OPTION);
+                check = false;
+                if(n == JOptionPane.YES_OPTION)
+                {
+                    check = true;
+                }
+            } while (check == true);
+            MyGraphAlgo algo1 = new MyGraphAlgo(this.gui.canvas.graphDrawing);
+            List<NodeData> res = algo1.tsp(TspList);
+            int [] print = new int[res.size()];
+            String result ="";
+            for (int i = 0; i < res.size(); i++) {
+                print [i] = res.get(i).getKey();
+                if(i==0){
+                    result = result + String.valueOf(res.get(i).getKey());
+                }
+                else
+                    result = result + "->"+ String.valueOf(res.get(i).getKey());
+            }
+
+            JOptionPane.showMessageDialog(null, "The final TSP path is " + result, "TSP Path", JOptionPane.PLAIN_MESSAGE);
+
+
+//            this.gui.canvas.graphDrawing.tsp(TspList);
+//            algo1.canvas.rePaint();
+//            this.gui.canvas.rePaint();
+        }
+
         if (e.getActionCommand() == "Remove Node") {
-            String chosen = this.gui.WhichNode.getText();
-            int num = Integer.valueOf(chosen);
+            String input = JOptionPane.showInputDialog("Enter Input:");
+            int num = Integer.valueOf(input);
             //MyGraph n = this.gui.canvas.graphDrawing.removeNode(num);
 //            gui.canvas.reloadGraph();
             this.gui.canvas.graphDrawing.removeNode(num);
@@ -65,10 +103,12 @@ public class ButtonListener extends JPanel implements ActionListener {
         }
 
         if (e.getActionCommand() == "ShortestPath") {
+            String srcTextBox = JOptionPane.showInputDialog("source:");
+            String destTextBox = JOptionPane.showInputDialog("dest:");
             algo = new MyGraphAlgo(this.gui.canvas.graphDrawing);
             List<NodeData> ans = new ArrayList<>();
-            int src = Integer.parseInt(gui.src.getText());
-            int dest = Integer.parseInt(gui.dest.getText());
+            int src = Integer.valueOf(srcTextBox);
+            int dest = Integer.valueOf(destTextBox);
             ans = algo.shortestPath(src, dest);
             for (NodeData n : ans) {
                 gui.canvas.paintNode(n.getKey());
