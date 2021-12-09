@@ -8,6 +8,8 @@ import Ex2.api.NodeData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
@@ -18,7 +20,6 @@ public class GraphCanvas extends JPanel {
     private String file;
     private GraphGUI frame;
     protected MyGraph graphDrawing;
-    private Graphics g;
     private HashMap<Integer, Point2D> coordinates;
 
     public GraphGUI getFrame() {
@@ -61,7 +62,6 @@ public class GraphCanvas extends JPanel {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        //this.graphDrawing = new MyGraph("src/Ex2/data/G3.json");
         Graphics2D g1 = (Graphics2D) g;
         g1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int width = getWidth();
@@ -79,17 +79,7 @@ public class GraphCanvas extends JPanel {
             y_max = Math.max(Point1.getLocation().y(), y_max);
             y_min = Math.min(Point1.getLocation().y(), y_min);
         }
-/*
-        for (int i = 0; i < graphDrawing.nodeSize(); i++) {
-            NodeData Point1 = this.graphDrawing.getNode(i);
-            x_max = Math.max(Point1.getLocation().x(), x_max);
-            x_min = Math.min(Point1.getLocation().x(), x_min);
-            y_max = Math.max(Point1.getLocation().y(), y_max);
-            y_min = Math.min(Point1.getLocation().y(), y_min);
-        }
 
-
- */
         double proportion_x = Math.abs(x_max - x_min), proportion_y = Math.abs(y_max - y_min);
         this.coordinates = new HashMap<>();
         Point2D p = new Point2D.Double(0, 0);
@@ -100,40 +90,11 @@ public class GraphCanvas extends JPanel {
         n = new Node();
         while (it.hasNext()) {
             n = it.next();
-            System.out.println("plot");
             double x1 = 55 + (this.graphDrawing.getNode(n.getKey()).getLocation().x() - x_min) * scaleX;
-            System.out.println(x1);
             double y1 = 40 + (this.graphDrawing.getNode(n.getKey()).getLocation().y() - y_min) * scaleY;
-            System.out.println(y1);
             p = new Point2D.Double(x1, y1);
             coordinates.put(this.graphDrawing.getNode(n.getKey()).getKey(), p);
-            //coordinates.put(this.graphDrawing.getNode(e.getDest()).getKey(), p);
-
         }
-/*
-        for (int i = 0; i < this.graphDrawing.getNodes().size() - 1; i++) {
-            System.out.println("plot");
-            double x1 = 55 + (this.graphDrawing.getNode(i).getLocation().x() - x_min) * scaleX;
-            System.out.println(x1);
-            double y1 = 40 + (this.graphDrawing.getNode(i).getLocation().y() - y_min) * scaleY;
-            System.out.println(y1);
-            double x2 = 55 + (this.graphDrawing.getNode(i + 1).getLocation().x() - x_min) * scaleX;
-            double y2 = 40 + (this.graphDrawing.getNode(i + 1).getLocation().y() - y_min) * scaleY;
-            System.out.println(x2);
-            System.out.println(y2);
-            p = new Point2D.Double(x1, y1);
-            coordinates.put(this.graphDrawing.getNode(i).getKey(), p);
-
-        }
-        double tmp1 = (this.graphDrawing.getNode(graphDrawing.getNodes().size() - 1).getLocation().x() - x_min) * scaleX;
-        double tmp2 = (this.graphDrawing.getNode(graphDrawing.getNodes().size() - 1).getLocation().y() - y_min) * scaleY;
-        g1.fill(new Ellipse2D.Double(tmp1, tmp2, 4, 4));
-        p = new Point2D.Double(tmp1, tmp2);
-
-        coordinates.put(this.graphDrawing.getNode(graphDrawing.getNodes().size() - 1).getKey(), p);
-
-
- */
 
         Iterator<EdgeData> iter = this.graphDrawing.edgeIter();
         EdgeData e = new Edge();
@@ -184,5 +145,4 @@ public class GraphCanvas extends JPanel {
         g.setColor(Color.RED);
         g.fillPolygon(xpoints, ypoints, 3);
     }
-
 }

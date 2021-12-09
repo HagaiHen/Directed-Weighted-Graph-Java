@@ -3,6 +3,7 @@ package Ex2.tests;
 import Ex2.MyGraph;
 import Ex2.MyGraphAlgo;
 import Ex2.api.DirectedWeightedGraph;
+import Ex2.api.DirectedWeightedGraphAlgorithms;
 import Ex2.api.EdgeData;
 import Ex2.api.NodeData;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MyGraphAlgoTest {
     MyGraph g = new MyGraph("src/Ex2/data/G3.json");
+    DirectedWeightedGraphAlgorithms thousand = loadGraph(new MyGraphAlgo(g), "src/Ex2/data/Test1.json");
     MyGraphAlgo g2 = new MyGraphAlgo(g);
 
     @Test
@@ -31,7 +33,6 @@ class MyGraphAlgoTest {
     @Test
     void copy() {
         DirectedWeightedGraph tmp = g2.copy();
-        System.out.println(tmp.toString() + ", " + g.toString());
         assertNotEquals(tmp.toString(), g.toString());
         assertEquals(tmp.getEdge(0, 1).getWeight(), g.getEdge(0, 1).getWeight());
         assertEquals(tmp.nodeSize(), g.nodeSize());
@@ -94,8 +95,8 @@ class MyGraphAlgoTest {
     }
 
     @Test
-    void center() { //TODO: after GUI
-
+    void center() {
+        assertEquals(40, g2.center().getKey());
     }
 
     @Test
@@ -128,9 +129,17 @@ class MyGraphAlgoTest {
     @Test
     void load() {
         MyGraphAlgo graph = new MyGraphAlgo(g);
-        graph.load("src/Ex2/data/new4.json");
+        graph.load("src/Ex2/data/Test1.json");
         assertNull(this.g.getEdge(0, 100));
         assertEquals(0.4303080890843676, this.g.getEdge(21, 33).getWeight());
     }
+    @Test
+    void thousandIsConnected(){
+        assertTrue(thousand.isConnected());
+    }
 
+    static DirectedWeightedGraphAlgorithms loadGraph(DirectedWeightedGraphAlgorithms graph, String file){
+        graph.load(file);
+        return graph;
+    }
 }

@@ -27,10 +27,9 @@ public class GraphGUI extends JFrame {
 
     public void setComponents(String file) {
         setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
-
         sideMenu = new JPanel();
         sideMenu.setAlignmentX(LEFT_ALIGNMENT);
-        sideMenu.setMaximumSize(new Dimension(200, 700));
+        sideMenu.setMaximumSize(new Dimension(0, 800));
         sideMenu.setLocation(0, 0);
         setSideMenu();
         add(sideMenu);

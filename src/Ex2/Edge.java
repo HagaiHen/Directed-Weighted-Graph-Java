@@ -19,6 +19,7 @@ public class Edge implements EdgeData {
     public static final int WHITE = 0, GREY = 1, BLACK = 2;
     private int tag;
 
+    // Constructor that generate an Edge by json file.
     public Edge(String json_file, int index) {
         try {
             Gson gson = new Gson();

@@ -121,7 +121,7 @@ public class main {
 //        int check = 1000000;
 //        double startTime = System.currentTimeMillis();
 //        Node n = new Node();
-        MyGraph g = new MyGraph("src/Ex2/data/1m.json");
+//        MyGraph g = new MyGraph("src/Ex2/data/1m.json");
 //        for (int i = 0; i < check; i++) {
 //            g.addNode(n);
 //        }
