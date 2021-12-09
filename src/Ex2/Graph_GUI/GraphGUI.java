@@ -27,10 +27,9 @@ public class GraphGUI extends JFrame {
 
     public void setComponents(String file) {
         setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
-
         sideMenu = new JPanel();
         sideMenu.setAlignmentX(LEFT_ALIGNMENT);
-        sideMenu.setMaximumSize(new Dimension(200, 700));
+        sideMenu.setMaximumSize(new Dimension(0, 800));
         sideMenu.setLocation(0, 0);
         setSideMenu();
         add(sideMenu);
@@ -71,10 +70,7 @@ public class GraphGUI extends JFrame {
 
         tsp = new JButton("TSP");
         tsp.addActionListener(bl);
-
-        WhichNode = new JTextField(2);
-        WhichNode.setBounds(0, 0, 60, 20);
-        sideMenu.add(WhichNode);
+        sideMenu.add(tsp);
 
         Remove_Node = new JButton("Remove Node");
         Remove_Node.setBounds(0, 60, 100, 50);
@@ -86,13 +82,6 @@ public class GraphGUI extends JFrame {
         ShortestPath.addActionListener(bl);
         sideMenu.add(ShortestPath);
 
-        src = new JTextField(2);
-        src.setBounds(0, 0, 60, 20);
-        sideMenu.add(src);
-
-        dest = new JTextField(2);
-        dest.setBounds(0, 0, 60, 20);
-        sideMenu.add(dest);
     }
 
 

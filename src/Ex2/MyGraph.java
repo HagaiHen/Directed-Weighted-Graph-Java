@@ -183,7 +183,7 @@ public class MyGraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public NodeData removeNode(int key) { //TODO: remove the iterator
+    public NodeData removeNode(int key) {
         this.nodesSize--;
         NodeData tmp = this.nodes.get(key);
         this.nodes.remove(key);
@@ -202,7 +202,7 @@ public class MyGraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public EdgeData removeEdge(int src, int dest) { //TODO: remove the iterator
+    public EdgeData removeEdge(int src, int dest) {
         String key = Integer.toString(src) + "," + Integer.toString(dest);
         EdgeData tmp = this.edges.get(key);
         this.edges.remove(key);

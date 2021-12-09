@@ -15,9 +15,11 @@ import java.util.List;
 public class ButtonListener extends JPanel implements ActionListener {
 
     private GraphGUI gui;
+    private int counter;
 
     public ButtonListener(GraphGUI gui) {
         this.gui = gui;
+        this.counter = 0;
     }
 
     @Override
@@ -26,59 +28,86 @@ public class ButtonListener extends JPanel implements ActionListener {
         MyGraphAlgo algo = new MyGraphAlgo(g);
 
         if (e.getActionCommand() == "Save") {
-
-            //algo.save(this.gui.saveInput.getText());
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showSaveDialog(this.gui.saveInput) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                // save to file
             }
             algo.save(fileChooser.getSelectedFile().getAbsolutePath());
         }
         if (e.getActionCommand() == "Load") {
-
-            //algo.load(this.gui.saveInput.getText());
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                // load from file
             }
             algo.load(fileChooser.getSelectedFile().getAbsolutePath());
-            //gui.setComponents(fileChooser.getSelectedFile().getAbsolutePath());
             gui.canvas.reloadGraph(fileChooser.getSelectedFile().getAbsolutePath());
-            //gui.canvas.graphDrawing = fileChooser.getSelectedFile().getAbsolutePath();
-            //gui = new GraphGUI(fileChooser.getSelectedFile().getAbsolutePath());
-            //gui.canvas = new GraphCanvas(gui.canvas.getFrame(), fileChooser.getSelectedFile().getAbsolutePath());
         }
         if (e.getActionCommand() == "Center") {
             int indx = algo.center().getKey();
             gui.canvas.paintNode(indx);
+            this.counter++;
+            if (counter % 2 == 0) {
+                gui.canvas.rePaint();
+            }
+        }
+
+        if (e.getActionCommand() == "TSP") {
+            boolean check = false;
+            List<NodeData> TspList = new ArrayList<NodeData>();
+            do {
+                String input = JOptionPane.showInputDialog("Enter Node:");
+                TspList.add(this.gui.canvas.graphDrawing.getNode(Integer.valueOf(input)));
+                int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "Enter Node:",
+                        "Enter Node:",
+                        JOptionPane.YES_NO_OPTION);
+                check = false;
+                if (n == JOptionPane.YES_OPTION)
+                    check = true;
+
+            } while (check == true);
+            MyGraphAlgo algo1 = new MyGraphAlgo(this.gui.canvas.graphDrawing);
+            List<NodeData> res = algo1.tsp(TspList);
+            int[] print = new int[res.size()];
+            String result = "";
+            for (int i = 0; i < res.size(); i++) {
+                print[i] = res.get(i).getKey();
+                if (i == 0)
+                    result = result + String.valueOf(res.get(i).getKey());
+                else
+                    result = result + "->" + String.valueOf(res.get(i).getKey());
+            }
+            JOptionPane.showMessageDialog(null, "The final TSP path is " + result, "TSP Path", JOptionPane.PLAIN_MESSAGE);
         }
 
         if (e.getActionCommand() == "Remove Node") {
-            String chosen = this.gui.WhichNode.getText();
-            int num = Integer.valueOf(chosen);
-            //MyGraph n = this.gui.canvas.graphDrawing.removeNode(num);
-//            gui.canvas.reloadGraph();
+            String input = JOptionPane.showInputDialog("Enter Input:");
+            int num = Integer.parseInt(input);
             this.gui.canvas.graphDrawing.removeNode(num);
             gui.canvas.rePaint();
         }
-
         if (e.getActionCommand() == "ShortestPath") {
+            this.counter++;
+            if (counter % 2 == 0) {
+                gui.canvas.rePaint();
+            }
+            String srcTextBox = JOptionPane.showInputDialog("source:");
+            String destTextBox = JOptionPane.showInputDialog("dest:");
             algo = new MyGraphAlgo(this.gui.canvas.graphDrawing);
             List<NodeData> ans = new ArrayList<>();
-            int src = Integer.parseInt(gui.src.getText());
-            int dest = Integer.parseInt(gui.dest.getText());
+            int src = Integer.parseInt(srcTextBox);
+            int dest = Integer.parseInt(destTextBox);
             ans = algo.shortestPath(src, dest);
             for (NodeData n : ans) {
                 gui.canvas.paintNode(n.getKey());
-                System.out.println(n.getKey());
             }
-            for (int i = 0; i < ans.size()-1; i++) {
-                gui.canvas.paintEdge(ans.get(i).getKey(), ans.get(i+1).getKey());
+            for (int i = 0; i < ans.size() - 1; i++) {
+                gui.canvas.paintEdge(ans.get(i).getKey(), ans.get(i + 1).getKey());
             }
         }
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
