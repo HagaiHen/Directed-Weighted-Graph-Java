@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
+//this class implements the JFRAME with panels, files and more
 public class GraphGUI extends JFrame {
 
     private JPanel sideMenu;
@@ -24,7 +25,7 @@ public class GraphGUI extends JFrame {
         setComponents(file);
         setVisible(true);
     }
-
+    //make a side menu at the corner of the frame
     public void setComponents(String file) {
         setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
         sideMenu = new JPanel();
@@ -40,28 +41,17 @@ public class GraphGUI extends JFrame {
 
     }
 
+    //build the side menu
     private void setSideMenu() {
-        //mb = new JMenuBar();
-
-
         save = new JButton("Save");
         save.setBounds(0, 0, 100, 20);
         save.addActionListener(bl);
         sideMenu.add(save);
 
-
         load = new JButton("Load");
         load.setBounds(0, 30, 100, 20);
         load.addActionListener(bl);
         sideMenu.add(load);
-
-        //saveInput = new JTextField(10);
-        //weightPanel.add(saveInput);
-        //weightPanel.add(save);
-        //saveInput.setBounds(0, 0, 100, 20);
-        //sideMenu.add(saveInput);
-
-        //weightPanel.add(load);
 
         center = new JButton("Center");
         center.setBounds(0, 60, 100, 20);
@@ -81,8 +71,5 @@ public class GraphGUI extends JFrame {
         ShortestPath.setBounds(0, 60, 100, 20);
         ShortestPath.addActionListener(bl);
         sideMenu.add(ShortestPath);
-
     }
-
-
 }

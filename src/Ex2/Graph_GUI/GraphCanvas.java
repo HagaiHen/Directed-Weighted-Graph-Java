@@ -8,13 +8,14 @@ import Ex2.api.NodeData;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Iterator;
 
+//this class has some function that help us to show the graph
 public class GraphCanvas extends JPanel {
 
     private String file;
@@ -32,15 +33,18 @@ public class GraphCanvas extends JPanel {
         graphDrawing = new MyGraph(file);
     }
 
+
     public void reloadGraph(String file) {
         graphDrawing = new MyGraph(file);
         paintComponent(this.getGraphics());
     }
 
+    //call for repaint the canvas
     public void rePaint() {
         paintComponent(this.getGraphics());
     }
 
+    //help us to paint a node for the user interface
     public void paintNode(int key) {
         Graphics2D g1 = (Graphics2D) this.getGraphics();
         double x = this.coordinates.get(key).getX();
@@ -49,6 +53,7 @@ public class GraphCanvas extends JPanel {
         g1.fill(new Ellipse2D.Double(x, y, 8, 8));
     }
 
+    //help us to paint an edge for the user interface
     public void paintEdge(int src, int dest) {
         Graphics2D g1 = (Graphics2D) this.getGraphics();
         g1.setColor(Color.black);
@@ -59,6 +64,7 @@ public class GraphCanvas extends JPanel {
         drawArrowLine(g1, x1 + 5, y1 + 5, x2 + 5, y2 + 5, 10, 10);
     }
 
+    //run the whole graph graphics
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
@@ -68,7 +74,7 @@ public class GraphCanvas extends JPanel {
         int height = getHeight();
 
         double x_max = Double.MIN_VALUE, x_min = Double.MAX_VALUE,
-                y_max = Double.MIN_VALUE, y_min = Double.MAX_VALUE;
+                y_max = Double.MIN_VALUE, y_min = Double.MAX_VALUE;     //help us to understand the proportion of the graph
         Iterator<NodeData> it = this.graphDrawing.nodeIter();
         NodeData n = new Node();
         while (it.hasNext()) {
@@ -79,17 +85,18 @@ public class GraphCanvas extends JPanel {
             y_max = Math.max(Point1.getLocation().y(), y_max);
             y_min = Math.min(Point1.getLocation().y(), y_min);
         }
+        double proportion_x = Math.abs(x_max - x_min),
+                proportion_y = Math.abs(y_max - y_min);
 
-        double proportion_x = Math.abs(x_max - x_min), proportion_y = Math.abs(y_max - y_min);
         this.coordinates = new HashMap<>();
         Point2D p = new Point2D.Double(0, 0);
 
-        double scaleX = (width - 100) / proportion_x;
+        double scaleX = (width - 100) / proportion_x;           //scale for proportion
         double scaleY = (height - 100) / proportion_y;
         it = this.graphDrawing.nodeIter();
         n = new Node();
-        while (it.hasNext()) {
-            n = it.next();
+        while (it.hasNext()) {                                  // run all over the nodes with iterator
+            n = it.next();                                      // and draw them in the panel
             double x1 = 55 + (this.graphDrawing.getNode(n.getKey()).getLocation().x() - x_min) * scaleX;
             double y1 = 40 + (this.graphDrawing.getNode(n.getKey()).getLocation().y() - y_min) * scaleY;
             p = new Point2D.Double(x1, y1);
@@ -98,8 +105,8 @@ public class GraphCanvas extends JPanel {
 
         Iterator<EdgeData> iter = this.graphDrawing.edgeIter();
         EdgeData e = new Edge();
-        while (iter.hasNext()) {
-            e = iter.next();
+        while (iter.hasNext()) {                                //run all over the edges with iterator
+            e = iter.next();                                    // and draw them in the panel
             if (this.coordinates.get(e.getSrc()) != null && this.coordinates.get(e.getDest()) != null) {
                 int src = e.getSrc(), dest = e.getDest();
                 double x1 = this.coordinates.get(src).getX(),
@@ -111,14 +118,15 @@ public class GraphCanvas extends JPanel {
         }
 
         Iterator<Point2D> ptr = coordinates.values().iterator();
-
-        while (ptr.hasNext()) {
+        while (ptr.hasNext()) {                                 // draw the whole points
             g1.setColor(Color.BLUE);
             p = ptr.next();
             g1.fill(new Ellipse2D.Double(p.getX(), p.getY(), 8, 8));
         }
     }
 
+
+    //draw an arrow line for show what is the direct of the edge
     private void drawArrowLine(Graphics g, double x1, double y1, double x2, double y2, double d, double h) {
         double dx = x2 - x1, dy = y2 - y1;
         double D = Math.sqrt(dx * dx + dy * dy);
