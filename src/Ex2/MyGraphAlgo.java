@@ -47,19 +47,19 @@ public class MyGraphAlgo implements DirectedWeightedGraphAlgorithms {
         return tmp;
     }
 
-    private void BFS(HashSet<Integer> visited, Queue<NodeData> keys, DirectedWeightedGraph g) {
+    private void BFS(HashSet<Integer> visited, Queue<NodeData> keys, MyGraph tmp) {
 
         while (!keys.isEmpty()) {
             NodeData d = keys.poll();
             visited.add(d.getKey());
             d.setTag(1);
-            Iterator<EdgeData> it = g.edgeIter(d.getKey());
-            while (it.hasNext()) {
-                int dest = (it.next().getDest());
+            //Iterator<EdgeData> it = g.edgeIter();
+            for (int i = 0; i < tmp.getConnectedTo()[d.getKey()].size(); i++) {
+                int dest = tmp.getConnectedTo()[d.getKey()].get(i).getDest();
                 if (!visited.contains(dest)) {
-                    keys.add(g.getNode(dest));
-                    visited.add(g.getNode(dest).getKey());
-                    g.getNode(dest).setTag(1);
+                    keys.add(tmp.getNode(dest));
+                    visited.add(tmp.getNode(dest).getKey());
+                    tmp.getNode(dest).setTag(1);
                 }
             }
         }
@@ -71,7 +71,7 @@ public class MyGraphAlgo implements DirectedWeightedGraphAlgorithms {
         MyGraph tmp = new MyGraph(edges, nodes);
         Iterator<EdgeData> itE = this.g.edgeIter();
         EdgeData e = new Edge();
-        e = itE.next();
+        //e = itE.next();
         Iterator<NodeData> itN = this.g.nodeIter();
         NodeData n = new Node();
 
@@ -92,12 +92,13 @@ public class MyGraphAlgo implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean isConnected() {
-        DirectedWeightedGraph tmp = this.copy();
+        this.save("src/Ex2/data/new.json");
+        MyGraph tmp = new MyGraph("src/Ex2/data/new.json");
         Iterator<NodeData> it = tmp.nodeIter();
         NodeData n = new Node();
         HashSet<Integer> visited = new HashSet<>();
         Queue<NodeData> qu = new LinkedList<>();
-        qu.add(this.g.nodeIter().next());
+        qu.add(tmp.nodeIter().next());
         BFS(visited, qu, tmp);
         while (it.hasNext()) {
             n = it.next();
@@ -409,16 +410,23 @@ public class MyGraphAlgo implements DirectedWeightedGraphAlgorithms {
         }
         int i = 0;
         for (NodeData n : cities) {
-
+            if (i == -1)
+                i++;
             if (citiesCopy.get(i).getKey() == src) {
                 citiesCopy.remove(i);
                 i--;
             }
+            if (i == -1)
+                i++;
+            if (i == citiesCopy.size())
+                break;
             if (citiesCopy.get(i).getKey() == dest) {
                 citiesCopy.remove(i);
                 i--;
             }
             i++;
+            if (i == citiesCopy.size())
+                break;
         }
         double minDest = Double.MAX_VALUE;
         List<Double> tmpDest = new ArrayList<>();
